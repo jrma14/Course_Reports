@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ListAdapter(val activity: Activity, private val list: List<Class>):
+class ListAdapter(val activity: Activity, private val list: List<Class>,private val onClickListener:OnClickListener):
     RecyclerView.Adapter<com.example.coursereports.ListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,6 +20,9 @@ class ListAdapter(val activity: Activity, private val list: List<Class>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(list[position])
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(list[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -35,7 +38,7 @@ class ListAdapter(val activity: Activity, private val list: List<Class>):
 
         fun bind(c: Class) {
             name.text = c.name
-            info.text = c.info
+            info.text = c.term + " | " + c.professor
             if (c.favorited){
                 star.backgroundTintList = ColorStateList.valueOf(activity.resources.getColor(R.color.yellow))
             }
