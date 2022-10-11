@@ -155,7 +155,6 @@ class MainActivity : AppCompatActivity() {
         val listType: Type = object : TypeToken<ArrayList<Course?>?>() {}.type
         var list: List<Course> = gson.fromJson(file.bufferedReader(), listType)
 
-        var filter = ""
 
         var allClasses: List<Course> = listOf()
         val liveClasses = MutableLiveData(allClasses)
@@ -206,15 +205,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         val searchText: EditText = findViewById(R.id.searchText)
+        var filter = searchText.text.toString()
         searchText.addTextChangedListener {
             filter = searchText.text.toString()
-            currClasses.value = liveClasses.value?.filter {
+            currClasses.value = liveClasses.value?.filter { it: Course ->
                 it.course_title.lowercase()
                     .contains(filter.lowercase()) || it.course_number.lowercase()
                     .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
-                    .contains(filter.lowercase())
+                    .contains(filter.lowercase()) && (it.term.isNotEmpty() || it.term == term)
             }
-//            Log.d("filter",currClasses.value.toString())
         }
 
         var classRecycler: RecyclerView = findViewById(R.id.classes)
