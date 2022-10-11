@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         val qrBtn:ImageView = findViewById(R.id.qr_code_button)
         qrBtn.setOnClickListener {
-            startActivity(Intent(this, ScannedBarcodeActivity::class.java))
+            startActivity(Intent(this, ScanQRCodeActivity::class.java))
         }
 
         val a: Button = findViewById(R.id.a)

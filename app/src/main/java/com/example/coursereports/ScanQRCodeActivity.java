@@ -23,16 +23,13 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-public class ScannedBarcodeActivity extends AppCompatActivity {
+public class ScanQRCodeActivity extends AppCompatActivity {
 
     SurfaceView surfaceView;
     TextView txtBarcodeValue;
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private static final int REQUEST_CAMERA_PERMISSION = 201;
-    Button btnAction;
-    String intentData = "";
-    boolean isEmail = false;
 
 
     @Override
@@ -46,29 +43,11 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     private void initViews() {
         txtBarcodeValue = findViewById(R.id.txtBarcodeValue);
         surfaceView = findViewById(R.id.surfaceView);
-        btnAction = findViewById(R.id.btnAction);
-
-
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (intentData.length() > 0) {
-                    if (isEmail)
-                        startActivity(new Intent(ScannedBarcodeActivity.this, classoverviewActivity.class).putExtra("course_title", intentData));
-                    else {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(intentData)));
-                    }
-                }
-
-
-            }
-        });
     }
 
     private void initialiseDetectorsAndSources() {
 
-        Toast.makeText(getApplicationContext(), "Barcode scanner started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "QR scanner started", Toast.LENGTH_SHORT).show();
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -83,10 +62,10 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
-                    if (ActivityCompat.checkSelfPermission(ScannedBarcodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(ScanQRCodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
                     } else {
-                        ActivityCompat.requestPermissions(ScannedBarcodeActivity.this, new
+                        ActivityCompat.requestPermissions(ScanQRCodeActivity.this, new
                                 String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                     }
 
@@ -111,7 +90,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                Toast.makeText(getApplicationContext(), "To prevent memory leaks barcode scanner has been stopped", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -124,21 +102,14 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            Intent i = new Intent(ScannedBarcodeActivity.this, classoverviewActivity.class);
+                            Intent i = new Intent(ScanQRCodeActivity.this, classoverviewActivity.class);
 
                             if (barcodes.valueAt(0).displayValue.split(":")[0].equals("course_reports")) {
                                 i.putExtra("course_title","winner");
                                 startActivity(i);
-                                //                                txtBarcodeValue.removeCallbacks(null);
-//                                intentData = barcodes.valueAt(0).email.address;
-//                                txtBarcodeValue.setText(intentData);
-//                                isEmail = true;
-//                                btnAction.setText("ADD CONTENT TO THE MAIL");
+
                             } else { // bad qr code
-                                isEmail = false;
-                                btnAction.setText("LAUNCH URL");
-                                intentData = barcodes.valueAt(0).displayValue;
-                                txtBarcodeValue.setText(intentData);
+                                Toast.makeText(getApplicationContext(), "QR Code Not Recognized", Toast.LENGTH_SHORT).show();
 
                             }
                         }
