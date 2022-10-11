@@ -2,16 +2,25 @@ package com.example.coursereports
 
 import android.os.Bundle
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class classoverviewActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.classoverview)
-        actionBar?.title = intent.getStringExtra("course_number")
+        this.supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar!!.setDisplayShowCustomEnabled(true)
+        supportActionBar!!.setCustomView(R.layout.action_bar)
+        val view: View = supportActionBar!!.customView
+        val title: TextView = view.findViewById(R.id.page_title)
+        title.text = intent.getStringExtra("course_number")
 
         val course_title = intent.getStringExtra("course_title")
         val course_title_text: TextView = findViewById(R.id.course_title)

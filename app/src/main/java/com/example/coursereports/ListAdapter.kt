@@ -2,14 +2,17 @@ package com.example.coursereports
 
 import android.app.Activity
 import android.content.res.ColorStateList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.File
+import java.lang.reflect.Type
 
-class ListAdapter(val activity: Activity, private val list: List<Class>,private val onClickListener:OnClickListener):
+class ListAdapter(val activity: Activity, private val list: List<Course>, private val onClickListener:OnClickListener):
     RecyclerView.Adapter<com.example.coursereports.ListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,6 +26,7 @@ class ListAdapter(val activity: Activity, private val list: List<Class>,private 
         holder.itemView.setOnClickListener {
             onClickListener.onClick(list[position])
         }
+        val star:View = holder.itemView.findViewById(R.id.star)
     }
 
     override fun getItemCount(): Int {
@@ -36,9 +40,9 @@ class ListAdapter(val activity: Activity, private val list: List<Class>,private 
         private val star: View
 
 
-        fun bind(c: Class) {
-            name.text = c.name
-            info.text = c.term + " | " + c.professor
+        fun bind(c: Course) {
+            name.text = c.course_title
+            info.text = c.term + " | " + c.first_name + " " + c.last_name
             if (c.favorited){
                 star.backgroundTintList = ColorStateList.valueOf(activity.resources.getColor(R.color.yellow))
             }

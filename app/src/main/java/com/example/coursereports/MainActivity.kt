@@ -2,70 +2,56 @@ package com.example.coursereports
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.coursereports.databinding.ActionBarBinding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.lang.reflect.Type
 
 
 class MainActivity : AppCompatActivity() {
-    var classes: List<Class> = listOf(
-        Class(
-            "Mobile & Ubiquitous Programming","CS 4518",
-            "A Term", "Firstname Lastname",
-            "4.2","A","10",true
-        ),
-        Class(
-            "Mobile & Ubiquitous Programming","CS 4518 ",
-            "A Term", "Firstname Lastname",
-            "4.2","A","10",true
-        ),
-        Class("OOP", "123","A Term", "prof", "1.2","B","100",false)
-    )
 
-    private val l = {
-        course: Class ->
+    private val l = { course: Course ->
         val intent: Intent = Intent(this, classoverviewActivity::class.java)
-        intent.putExtra("course_title", course.name)
-        intent.putExtra("term",course.term)
-        intent.putExtra("professor",course.professor)
-        intent.putExtra("average",course.average)
-        intent.putExtra("grade",course.grade)
-        intent.putExtra("hours",course.hours)
-        intent.putExtra("course_number",course.number)
+        intent.putExtra("course_title", course.course_title)
+        intent.putExtra("term", course.term)
+        intent.putExtra("professor", course.first_name + " " + course.last_name)
+        intent.putExtra("average", course.overallAverage)
+        intent.putExtra("grade", course.expectedGrade)
+        intent.putExtra("hours", course.outsideClassTime)
+        intent.putExtra("course_number", course.course_number)
         startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        actionBar?.title = "Course Reports"
-
-        this.supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-
         // Displaying the custom layout in the ActionBar
+        this.supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar!!.setDisplayShowCustomEnabled(true)
         supportActionBar!!.setCustomView(R.layout.action_bar)
-        val bind = ActionBarBinding.inflate(layoutInflater)
-        bind.pageTitle.setText("Course Reports")
-//        actionBar?.setCustomView(R.layout.actionbar)
+        val view: View = supportActionBar!!.customView
+        val title: TextView = view.findViewById(R.id.page_title)
+        title.text = "Course Reports"
+        val gson: Gson = Gson()
 
 
-        var list: List<Class> = listOf(
-            Class(
-                "Mobile & Ubiquitous Programming","CS 4518",
-                "A Term", "Firstname Lastname",
-                "4.2","A","10",true
-            ),
-            Class(
-                "Mobile & Ubiquitous Programming","CS 4518 ",
-                "A Term", "Firstname Lastname",
-                "4.2","A","10",true
-            )
-        )
+
+        val file = File(filesDir, "favorites.json")
+        val listType: Type = object : TypeToken<ArrayList<Course?>?>() {}.type
+        var list: List<Course> = gson.fromJson(file.bufferedReader(), listType)
+
+
         val liveList = MutableLiveData(list)
         var adapter: ListAdapter = ListAdapter(this, list, OnClickListener(l))
         var recycler: RecyclerView = findViewById(R.id.favorites)
@@ -79,12 +65,23 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = adapter
         liveList.observe(this) {
             it?.let {
-                adapter = ListAdapter(this, it, OnClickListener (l))
+                adapter = ListAdapter(this, it, OnClickListener(l))
                 recycler.adapter = adapter
             }
         }
 
+        val ps = RetrofitHelper.getInstance().create(PlanetscaleAPI::class.java)
+
+        var classes: List<Course> = listOf()
         val liveClasses = MutableLiveData(classes)
+        GlobalScope.launch {
+            val res = ps.getAllCourses()
+            Log.d("coursedata",res.body().toString())
+            runOnUiThread {
+                liveClasses.value = res.body()
+            }
+
+        }
         var classRecycler: RecyclerView = findViewById(R.id.classes)
         var classAdapter: ListAdapter = ListAdapter(this, classes, OnClickListener(l))
         val classLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
