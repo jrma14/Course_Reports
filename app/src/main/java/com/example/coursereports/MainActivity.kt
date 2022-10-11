@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("hours", course.outsideClassTime)
         intent.putExtra("course_number", course.course_number)
         intent.putExtra("survey_size", course.surveySize.toString())
+        intent.putExtra("id",course.id.toString())
         startActivity(intent)
     }
 

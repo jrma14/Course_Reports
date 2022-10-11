@@ -124,14 +124,17 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
+                            Intent i = new Intent(ScannedBarcodeActivity.this, classoverviewActivity.class);
 
-                            if (barcodes.valueAt(0).email != null) {
-                                txtBarcodeValue.removeCallbacks(null);
-                                intentData = barcodes.valueAt(0).email.address;
-                                txtBarcodeValue.setText(intentData);
-                                isEmail = true;
-                                btnAction.setText("ADD CONTENT TO THE MAIL");
-                            } else {
+                            if (barcodes.valueAt(0).displayValue.split(":")[0].equals("course_reports")) {
+                                i.putExtra("course_title","winner");
+                                startActivity(i);
+                                //                                txtBarcodeValue.removeCallbacks(null);
+//                                intentData = barcodes.valueAt(0).email.address;
+//                                txtBarcodeValue.setText(intentData);
+//                                isEmail = true;
+//                                btnAction.setText("ADD CONTENT TO THE MAIL");
+                            } else { // bad qr code
                                 isEmail = false;
                                 btnAction.setText("LAUNCH URL");
                                 intentData = barcodes.valueAt(0).displayValue;
