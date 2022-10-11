@@ -12,7 +12,7 @@ data class Course(
     val expectedGrade: String,
     val outsideClassTime: String,
     val surveySize: Int,
-    val favorited: Boolean = false
+    var favorited: Boolean = false
 ) {
 //    override fun toString(): String {
 //        return "{name: " + name + ",number:" + number + ",term:" + term + ",professor:" + professor + ",average:" + average + ",grade:" + grade + ",hours:" + hours + "}"

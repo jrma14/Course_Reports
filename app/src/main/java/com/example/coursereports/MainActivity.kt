@@ -149,26 +149,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         val file = File(filesDir, "favorites.json")
+        if (!file.exists()) {
+            file.writeText("[]")
+        }
         val listType: Type = object : TypeToken<ArrayList<Course?>?>() {}.type
         var list: List<Course> = gson.fromJson(file.bufferedReader(), listType)
 
-        var filter: String = ""
+        var filter = ""
 
+        var allClasses: List<Course> = listOf()
+        val liveClasses = MutableLiveData(allClasses)
+        val currClasses = MutableLiveData(allClasses)
 
         val liveList = MutableLiveData(list)
-        var adapter: ListAdapter = ListAdapter(this, list, OnClickListener(l))
+        var adapter = ListAdapter(this, list, OnClickListener(l), filesDir, liveList, currClasses)
         var recycler: RecyclerView = findViewById(R.id.favorites)
-        val layoutManager: LinearLayoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration = DividerItemDecoration(
-            recycler.context,
-            layoutManager.orientation
+            recycler.context, layoutManager.orientation
         )
         recycler.addItemDecoration(dividerItemDecoration)
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         liveList.observe(this) {
             it?.let {
-                adapter = ListAdapter(this, it, OnClickListener(l))
+                adapter = ListAdapter(this, it, OnClickListener(l), filesDir, liveList, currClasses)
                 recycler.adapter = adapter
                 val favoriteText: TextView = findViewById(R.id.textView)
                 val favorites: RecyclerView = findViewById(R.id.favorites)
@@ -184,19 +189,21 @@ class MainActivity : AppCompatActivity() {
 
         val ps = RetrofitHelper.getInstance().create(PlanetscaleAPI::class.java)
 
-        var allClasses: List<Course> = listOf()
-        val liveClasses = MutableLiveData(allClasses)
-        val currClasses = MutableLiveData(allClasses)
         GlobalScope.launch {
             val res = ps.getAllCourses()
-            Log.d("coursedata", res.body().toString())
+            for (course in liveList.value!!) {
+                Log.d("coursedata", "Favoriting " + course.id + " " + course.course_title)
+                val listCourse = res.body()?.find { it.id == course.id }
+                if (listCourse != null) {
+                    listCourse.favorited = true
+                }
+            }
             runOnUiThread {
                 liveClasses.value = res.body()
                 currClasses.value = res.body()
             }
 
         }
-
 
         val searchText: EditText = findViewById(R.id.searchText)
         searchText.addTextChangedListener {
@@ -209,19 +216,22 @@ class MainActivity : AppCompatActivity() {
             }
 //            Log.d("filter",currClasses.value.toString())
         }
+
         var classRecycler: RecyclerView = findViewById(R.id.classes)
-        var classAdapter: ListAdapter = ListAdapter(this, currClasses.value!!, OnClickListener(l))
-        val classLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
+        var classAdapter = ListAdapter(
+            this, currClasses.value!!, OnClickListener(l), filesDir, liveList, currClasses
+        )
+        val classLayoutManager = LinearLayoutManager(this)
         val classDividerItemDecoration = DividerItemDecoration(
-            classRecycler.context,
-            classLayoutManager.orientation
+            classRecycler.context, classLayoutManager.orientation
         )
         classRecycler.addItemDecoration(classDividerItemDecoration)
         classRecycler.layoutManager = classLayoutManager
         classRecycler.adapter = classAdapter
         currClasses.observe(this) {
             it?.let {
-                classAdapter = ListAdapter(this, it, OnClickListener(l))
+                classAdapter =
+                    ListAdapter(this, it, OnClickListener(l), filesDir, liveList, currClasses)
                 classRecycler.adapter = classAdapter
             }
         }
