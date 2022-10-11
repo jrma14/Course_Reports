@@ -1,18 +1,16 @@
 package com.example.coursereports
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginBottom
-import androidx.core.view.marginEnd
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -53,6 +51,11 @@ class MainActivity : AppCompatActivity() {
         title.text = "Course Reports"
         val gson: Gson = Gson()
         var term: String = ""
+
+        val qrBtn:ImageView = findViewById(R.id.qr_code_button)
+        qrBtn.setOnClickListener {
+            startActivity(Intent(this, ScannedBarcodeActivity::class.java))
+        }
 
         val a: Button = findViewById(R.id.a)
         val b: Button = findViewById(R.id.b)
