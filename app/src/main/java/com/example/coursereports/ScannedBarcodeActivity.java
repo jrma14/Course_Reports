@@ -128,7 +128,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
                             if (barcodes.valueAt(0).displayValue.split(":")[0].equals("course_reports")) {
                                 i.putExtra("course_title","winner");
-                                startActivity(i);
+
                                 //                                txtBarcodeValue.removeCallbacks(null);
 //                                intentData = barcodes.valueAt(0).email.address;
 //                                txtBarcodeValue.setText(intentData);
