@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,11 +47,17 @@ class MainActivity : AppCompatActivity() {
         title.text = "Course Reports"
         val gson: Gson = Gson()
 
-
-
         val file = File(filesDir, "favorites.json")
         val listType: Type = object : TypeToken<ArrayList<Course?>?>() {}.type
         var list: List<Course> = gson.fromJson(file.bufferedReader(), listType)
+
+        var filter: String = ""
+
+
+
+
+
+
 
 
         val liveList = MutableLiveData(list)
@@ -72,18 +80,30 @@ class MainActivity : AppCompatActivity() {
 
         val ps = RetrofitHelper.getInstance().create(PlanetscaleAPI::class.java)
 
-        var classes: List<Course> = listOf()
-        val liveClasses = MutableLiveData(classes)
+        var allClasses: List<Course> = listOf()
+        val liveClasses = MutableLiveData(allClasses)
+        val currClasses = MutableLiveData(allClasses)
         GlobalScope.launch {
             val res = ps.getAllCourses()
             Log.d("coursedata",res.body().toString())
             runOnUiThread {
                 liveClasses.value = res.body()
+                currClasses.value = res.body()
             }
 
         }
+
+
+        val searchText: EditText = findViewById(R.id.searchText)
+        searchText.addTextChangedListener {
+            filter = searchText.text.toString()
+            currClasses.value = liveClasses.value?.filter {
+                it.course_title.lowercase().contains(filter.lowercase()) || it.course_number.lowercase().contains(filter.lowercase()) || it.course_number.lowercase().replace(" ","").contains(filter.lowercase())
+            }
+            Log.d("filter",currClasses.value.toString())
+        }
         var classRecycler: RecyclerView = findViewById(R.id.classes)
-        var classAdapter: ListAdapter = ListAdapter(this, classes, OnClickListener(l))
+        var classAdapter: ListAdapter = ListAdapter(this, currClasses.value!!, OnClickListener(l))
         val classLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
         val classDividerItemDecoration = DividerItemDecoration(
             classRecycler.context,
@@ -92,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         classRecycler.addItemDecoration(classDividerItemDecoration)
         classRecycler.layoutManager = classLayoutManager
         classRecycler.adapter = classAdapter
-        liveClasses.observe(this) {
+        currClasses.observe(this) {
             it?.let {
                 classAdapter = ListAdapter(this, it, OnClickListener(l))
                 classRecycler.adapter = classAdapter

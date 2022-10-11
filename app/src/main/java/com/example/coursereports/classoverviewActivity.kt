@@ -42,6 +42,7 @@ class classoverviewActivity: AppCompatActivity() {
 
         val grade = intent.getStringExtra("grade")
         val grade_text: TextView = findViewById(R.id.grade)
+
         grade_text.setText(grade)
 
         val hours = intent.getStringExtra("hours")
