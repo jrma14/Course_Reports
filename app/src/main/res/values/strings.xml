@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Course Reports</string>
+    <string name="qr_code_description">QR Code</string>
 </resources>
