@@ -62,92 +62,6 @@ class MainActivity : AppCompatActivity() {
         var bc: Boolean = false
         var cc: Boolean = false
         var dc: Boolean = false
-
-        a.setOnClickListener {
-            if (ac) {
-                a.background = getDrawable(R.drawable.pill)
-                a.setTextColor(Color.parseColor("#aaaaaa"))
-                term = ""
-            } else {
-                term = "A"
-                a.background = getDrawable(R.drawable.pill_crimson)
-                a.setTextColor(Color.WHITE)
-                b.background = getDrawable(R.drawable.pill)
-                b.setTextColor(Color.parseColor("#aaaaaa"))
-                c.background = getDrawable(R.drawable.pill)
-                c.setTextColor(Color.parseColor("#aaaaaa"))
-                d.background = getDrawable(R.drawable.pill)
-                d.setTextColor(Color.parseColor("#aaaaaa"))
-                bc = false
-                cc = false
-                dc = false
-            }
-            ac = !ac
-        }
-        b.setOnClickListener {
-            if (bc) {
-                b.background = getDrawable(R.drawable.pill)
-                b.setTextColor(Color.parseColor("#aaaaaa"))
-                term = ""
-            } else {
-                term = "B"
-                b.background = getDrawable(R.drawable.pill_crimson)
-                b.setTextColor(Color.WHITE)
-                d.background = getDrawable(R.drawable.pill)
-                d.setTextColor(Color.parseColor("#aaaaaa"))
-                c.background = getDrawable(R.drawable.pill)
-                c.setTextColor(Color.parseColor("#aaaaaa"))
-                a.background = getDrawable(R.drawable.pill)
-                a.setTextColor(Color.parseColor("#aaaaaa"))
-                ac = false
-                cc = false
-                dc = false
-            }
-            bc = !bc
-        }
-        c.setOnClickListener {
-            if (cc) {
-                c.background = getDrawable(R.drawable.pill)
-                c.setTextColor(Color.parseColor("#aaaaaa"))
-                term = ""
-            } else {
-                term = "C"
-                c.background = getDrawable(R.drawable.pill_crimson)
-                c.setTextColor(Color.WHITE)
-                b.background = getDrawable(R.drawable.pill)
-                b.setTextColor(Color.parseColor("#aaaaaa"))
-                d.background = getDrawable(R.drawable.pill)
-                d.setTextColor(Color.parseColor("#aaaaaa"))
-                a.background = getDrawable(R.drawable.pill)
-                a.setTextColor(Color.parseColor("#aaaaaa"))
-                ac = false
-                bc = false
-                dc = false
-            }
-            cc = !cc
-        }
-        d.setOnClickListener {
-            if (dc) {
-                d.background = getDrawable(R.drawable.pill)
-                d.setTextColor(Color.parseColor("#aaaaaa"))
-                term = ""
-            } else {
-                term = "D"
-                d.background = getDrawable(R.drawable.pill_crimson)
-                d.setTextColor(Color.WHITE)
-                b.background = getDrawable(R.drawable.pill)
-                b.setTextColor(Color.parseColor("#aaaaaa"))
-                c.background = getDrawable(R.drawable.pill)
-                c.setTextColor(Color.parseColor("#aaaaaa"))
-                a.background = getDrawable(R.drawable.pill)
-                a.setTextColor(Color.parseColor("#aaaaaa"))
-                ac = false
-                cc = false
-                bc = false
-            }
-            dc = !dc
-        }
-
         val file = File(filesDir, "favorites.json")
         if (!file.exists()) {
             file.writeText("[]")
@@ -167,6 +81,128 @@ class MainActivity : AppCompatActivity() {
         val dividerItemDecoration = DividerItemDecoration(
             recycler.context, layoutManager.orientation
         )
+        val searchText: EditText = findViewById(R.id.searchText)
+        var filter = searchText.text.toString()
+
+        a.setOnClickListener {
+            if (ac) {
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+                Log.d("Term: ", term)
+            } else {
+                term = "A"
+                Log.d("Term: ", term)
+                a.background = getDrawable(R.drawable.pill_crimson)
+                a.setTextColor(Color.WHITE)
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                bc = false
+                cc = false
+                dc = false
+            }
+            filter = searchText.text.toString()
+            currClasses.value = liveClasses.value?.filter { it: Course ->
+                (filter.isEmpty() || it.course_title.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
+                    .contains(filter.lowercase())) && (term.isEmpty() || it.term == term)
+            }
+            ac = !ac
+        }
+        b.setOnClickListener {
+            if (bc) {
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "B"
+                println(term)
+                b.background = getDrawable(R.drawable.pill_crimson)
+                b.setTextColor(Color.WHITE)
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                ac = false
+                cc = false
+                dc = false
+            }
+            filter = searchText.text.toString()
+            currClasses.value = liveClasses.value?.filter { it: Course ->
+                (filter.isEmpty() || it.course_title.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
+                    .contains(filter.lowercase())) && (term.isEmpty() || it.term == term)
+            }
+            bc = !bc
+        }
+        c.setOnClickListener {
+            if (cc) {
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "C"
+                println(term)
+                c.background = getDrawable(R.drawable.pill_crimson)
+                c.setTextColor(Color.WHITE)
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                ac = false
+                bc = false
+                dc = false
+            }
+            filter = searchText.text.toString()
+            currClasses.value = liveClasses.value?.filter { it: Course ->
+                (filter.isEmpty() || it.course_title.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
+                    .contains(filter.lowercase())) && (term.isEmpty() || it.term == term)
+            }
+            cc = !cc
+        }
+        d.setOnClickListener {
+            if (dc) {
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "D"
+                println(term)
+                d.background = getDrawable(R.drawable.pill_crimson)
+                d.setTextColor(Color.WHITE)
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                ac = false
+                cc = false
+                bc = false
+            }
+            filter = searchText.text.toString()
+            currClasses.value = liveClasses.value?.filter { it: Course ->
+                (filter.isEmpty() || it.course_title.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
+                    .contains(filter.lowercase())) && (term.isEmpty() || it.term == term)
+            }
+            dc = !dc
+        }
+
+
         recycler.addItemDecoration(dividerItemDecoration)
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
@@ -204,15 +240,14 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        val searchText: EditText = findViewById(R.id.searchText)
-        var filter = searchText.text.toString()
+
         searchText.addTextChangedListener {
             filter = searchText.text.toString()
             currClasses.value = liveClasses.value?.filter { it: Course ->
-                it.course_title.lowercase()
+                (filter.length == 0 || it.course_title.lowercase()
                     .contains(filter.lowercase()) || it.course_number.lowercase()
                     .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
-                    .contains(filter.lowercase()) && (it.term.isNotEmpty() || it.term == term)
+                    .contains(filter.lowercase())) && (term.isEmpty() || it.term == term)
             }
         }
 
@@ -239,6 +274,7 @@ class MainActivity : AppCompatActivity() {
 
 //        setRecyclerViewItemTouchListener()
     }
+
 
 //    private fun setRecyclerViewItemTouchListener() {
 //
