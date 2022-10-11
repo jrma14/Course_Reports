@@ -29,25 +29,29 @@ class classoverviewActivity: AppCompatActivity() {
 
         val term = intent.getStringExtra("term")
         val term_text: TextView = findViewById(R.id.course_term)
-        term_text.setText(term)
+        term_text.setText(term + " Term")
 
         val professor = intent.getStringExtra("professor")
         val professor_text: TextView = findViewById(R.id.professor)
         professor_text.setText(professor)
 
+        val surveySize = intent.getStringExtra("survey_size")
+        val surveySizeText: TextView = findViewById(R.id.surveySize)
+        surveySizeText.setText("Survey Size: " + surveySize)
+
 
         val avg = intent.getStringExtra("average")
         val avg_text: TextView = findViewById(R.id.avg)
-        avg_text.setText(avg)
+        avg_text.setText("Overall Rating:\n" + avg)
 
         val grade = intent.getStringExtra("grade")
         val grade_text: TextView = findViewById(R.id.grade)
 
-        grade_text.setText(grade)
+        grade_text.setText("Expected Grade:\n" + grade)
 
         val hours = intent.getStringExtra("hours")
         val hours_text: TextView = findViewById(R.id.hours)
-        hours_text.setText(hours)
+        hours_text.setText(hours + "hrs/week")
     }
 
 }

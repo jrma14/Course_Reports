@@ -1,13 +1,18 @@
 package com.example.coursereports
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginBottom
+import androidx.core.view.marginEnd
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -32,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("grade", course.expectedGrade)
         intent.putExtra("hours", course.outsideClassTime)
         intent.putExtra("course_number", course.course_number)
+        intent.putExtra("survey_size", course.surveySize.toString())
         startActivity(intent)
     }
 
@@ -46,18 +52,107 @@ class MainActivity : AppCompatActivity() {
         val title: TextView = view.findViewById(R.id.page_title)
         title.text = "Course Reports"
         val gson: Gson = Gson()
+        var term: String = ""
+
+        val a: Button = findViewById(R.id.a)
+        val b: Button = findViewById(R.id.b)
+        val c: Button = findViewById(R.id.c)
+        val d: Button = findViewById(R.id.d)
+        var ac: Boolean = false
+        var bc: Boolean = false
+        var cc: Boolean = false
+        var dc: Boolean = false
+
+        a.setOnClickListener {
+            if (ac) {
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "A"
+                a.background = getDrawable(R.drawable.pill_crimson)
+                a.setTextColor(Color.WHITE)
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                bc = false
+                cc = false
+                dc = false
+            }
+            ac = !ac
+        }
+        b.setOnClickListener {
+            if (bc) {
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "B"
+                b.background = getDrawable(R.drawable.pill_crimson)
+                b.setTextColor(Color.WHITE)
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                ac = false
+                cc = false
+                dc = false
+            }
+            bc = !bc
+        }
+        c.setOnClickListener {
+            if (cc) {
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "C"
+                c.background = getDrawable(R.drawable.pill_crimson)
+                c.setTextColor(Color.WHITE)
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                ac = false
+                bc = false
+                dc = false
+            }
+            cc = !cc
+        }
+        d.setOnClickListener {
+            if (dc) {
+                d.background = getDrawable(R.drawable.pill)
+                d.setTextColor(Color.parseColor("#aaaaaa"))
+                term = ""
+            } else {
+                term = "D"
+                d.background = getDrawable(R.drawable.pill_crimson)
+                d.setTextColor(Color.WHITE)
+                b.background = getDrawable(R.drawable.pill)
+                b.setTextColor(Color.parseColor("#aaaaaa"))
+                c.background = getDrawable(R.drawable.pill)
+                c.setTextColor(Color.parseColor("#aaaaaa"))
+                a.background = getDrawable(R.drawable.pill)
+                a.setTextColor(Color.parseColor("#aaaaaa"))
+                ac = false
+                cc = false
+                bc = false
+            }
+            dc = !dc
+        }
 
         val file = File(filesDir, "favorites.json")
         val listType: Type = object : TypeToken<ArrayList<Course?>?>() {}.type
         var list: List<Course> = gson.fromJson(file.bufferedReader(), listType)
 
         var filter: String = ""
-
-
-
-
-
-
 
 
         val liveList = MutableLiveData(list)
@@ -75,6 +170,15 @@ class MainActivity : AppCompatActivity() {
             it?.let {
                 adapter = ListAdapter(this, it, OnClickListener(l))
                 recycler.adapter = adapter
+                val favoriteText: TextView = findViewById(R.id.textView)
+                val favorites: RecyclerView = findViewById(R.id.favorites)
+                if (it.isEmpty()) {
+                    favoriteText.visibility = View.INVISIBLE
+                    favorites.visibility = View.INVISIBLE
+                } else {
+                    favoriteText.visibility = View.VISIBLE
+                    favorites.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -85,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         val currClasses = MutableLiveData(allClasses)
         GlobalScope.launch {
             val res = ps.getAllCourses()
-            Log.d("coursedata",res.body().toString())
+            Log.d("coursedata", res.body().toString())
             runOnUiThread {
                 liveClasses.value = res.body()
                 currClasses.value = res.body()
@@ -98,9 +202,12 @@ class MainActivity : AppCompatActivity() {
         searchText.addTextChangedListener {
             filter = searchText.text.toString()
             currClasses.value = liveClasses.value?.filter {
-                it.course_title.lowercase().contains(filter.lowercase()) || it.course_number.lowercase().contains(filter.lowercase()) || it.course_number.lowercase().replace(" ","").contains(filter.lowercase())
+                it.course_title.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase()
+                    .contains(filter.lowercase()) || it.course_number.lowercase().replace(" ", "")
+                    .contains(filter.lowercase())
             }
-            Log.d("filter",currClasses.value.toString())
+//            Log.d("filter",currClasses.value.toString())
         }
         var classRecycler: RecyclerView = findViewById(R.id.classes)
         var classAdapter: ListAdapter = ListAdapter(this, currClasses.value!!, OnClickListener(l))

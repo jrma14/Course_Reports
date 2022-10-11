@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -27,6 +28,7 @@ class ListAdapter(val activity: Activity, private val list: List<Course>, privat
             onClickListener.onClick(list[position])
         }
         val star:View = holder.itemView.findViewById(R.id.star)
+
     }
 
     override fun getItemCount(): Int {
@@ -42,7 +44,7 @@ class ListAdapter(val activity: Activity, private val list: List<Course>, privat
 
         fun bind(c: Course) {
             name.text = c.course_title
-            info.text = c.term + " | " + c.first_name + " " + c.last_name
+            info.text = c.term + " | " + c.first_name + " " + c.last_name + " | " + c.year
             if (c.favorited){
                 star.backgroundTintList = ColorStateList.valueOf(activity.resources.getColor(R.color.yellow))
             }
