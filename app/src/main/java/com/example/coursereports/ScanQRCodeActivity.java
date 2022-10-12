@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -22,6 +23,15 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.security.Provider;
+
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ScanQRCodeActivity extends AppCompatActivity {
 
@@ -30,6 +40,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private static final int REQUEST_CAMERA_PERMISSION = 201;
+
 
 
     @Override
@@ -103,11 +114,29 @@ public class ScanQRCodeActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Intent i = new Intent(ScanQRCodeActivity.this, classoverviewActivity.class);
-
+                            int id = Integer.parseInt(barcodes.valueAt(0).displayValue.split(":")[1]);
                             if (barcodes.valueAt(0).displayValue.split(":")[0].equals("course_reports")) {
-                                i.putExtra("course_title","winner");
-                                startActivity(i);
+                                PlanetscaleAPI service = RetrofitHelper.INSTANCE.getInstance().create(PlanetscaleAPI.class);
+                                Call<Course> call = service.getCourse(id);
+                                call.enqueue(new Callback<Course>() {
+                                    @Override
+                                    public void onResponse(Call<Course> call, Response<Course> response) {
+                                        CourseHelper ch = new CourseHelper();
+                                        ch.putExtras(i,response.body());
+                                        startActivity(i);
+                                    }
 
+                                    @Override
+                                    public void onFailure(Call<Course> call, Throwable t) {
+
+                                    }
+                                });
+
+
+//                                CourseHelper ch = new CourseHelper();
+//                                Course c = ch.getCourse(id);
+//                                ch.putExtras(i,c);
+//                                startActivity(i);
                             } else { // bad qr code
                                 Toast.makeText(getApplicationContext(), "QR Code Not Recognized", Toast.LENGTH_SHORT).show();
 

@@ -1,6 +1,7 @@
 package com.example.coursereports
 
 import android.R.attr.bitmap
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
@@ -45,10 +46,14 @@ class classoverviewActivity: AppCompatActivity() {
         setContentView(R.layout.classoverview)
         this.supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar!!.setDisplayShowCustomEnabled(true)
-        supportActionBar!!.setCustomView(R.layout.action_bar)
+        supportActionBar!!.setCustomView(R.layout.action_bar_class)
         val view: View = supportActionBar!!.customView
         val title: TextView = view.findViewById(R.id.page_title)
         title.text = intent.getStringExtra("course_number")
+        val home:ImageView = view.findViewById(R.id.home)
+        home.setOnClickListener {
+            startActivity(Intent(this,MainActivity::class.java))
+        }
 
         val course_title = intent.getStringExtra("course_title")
         val course_title_text: TextView = findViewById(R.id.course_title)
