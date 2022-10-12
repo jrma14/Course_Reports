@@ -129,7 +129,7 @@ class classoverviewActivity : AppCompatActivity() {
             fOut.close()
         }
 
-        Toast.makeText(applicationContext, "Saved", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Saved to Downloads!", Toast.LENGTH_SHORT).show()
         return true
     }
 
