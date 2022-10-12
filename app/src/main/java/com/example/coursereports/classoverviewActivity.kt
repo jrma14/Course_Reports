@@ -73,7 +73,7 @@ class classoverviewActivity : AppCompatActivity() {
 
         val term = intent.getStringExtra("term")
         val term_text: TextView = findViewById(R.id.course_term)
-        term_text.setText(term + " Term")
+        term_text.setText(intent.getStringExtra("year") + " | " + term + " Term")
 
         val professor = intent.getStringExtra("professor")
         val professor_text: TextView = findViewById(R.id.professor)
@@ -86,16 +86,16 @@ class classoverviewActivity : AppCompatActivity() {
 
         val avg = intent.getStringExtra("average")
         val avg_text: TextView = findViewById(R.id.avg)
-        avg_text.setText("Overall Rating:\n" + avg)
+        avg_text.setText(avg)
 
         val grade = intent.getStringExtra("grade")
         val grade_text: TextView = findViewById(R.id.grade)
 
-        grade_text.setText("Expected Grade:\n" + grade)
+        grade_text.setText(grade)
 
         val hours = intent.getStringExtra("hours")
         val hours_text: TextView = findViewById(R.id.hours)
-        hours_text.setText(hours + "hrs/week")
+        hours_text.setText(hours)
 
         val qrGeneraterBtn: Button = findViewById(R.id.qr)
         qrGeneraterBtn.setOnClickListener {

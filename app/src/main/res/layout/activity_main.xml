@@ -60,11 +60,12 @@
             android:background="@drawable/pill"
             android:text="A Term"
             android:textColor="#aaa"
-            android:textSize="6sp" />
+            android:textSize="12sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/b"
             android:layout_width="76dp"
+            style="@style/Theme.CourseReports"
             android:layout_height="28dp"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="5dp"
@@ -72,31 +73,33 @@
             android:background="@drawable/pill"
             android:text="B Term"
             android:textColor="#aaa"
-            android:textSize="6sp" />
+            android:textSize="12sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/c"
             android:layout_width="76dp"
             android:layout_height="28dp"
+            style="@style/Theme.CourseReports"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:background="@drawable/pill"
             android:text="C Term"
             android:textColor="#aaa"
-            android:textSize="6sp" />
+            android:textSize="12sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/d"
             android:layout_width="76dp"
             android:layout_height="28dp"
+            style="@style/Theme.CourseReports"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:background="@drawable/pill"
             android:text="D Term"
             android:textColor="#aaa"
-            android:textSize="6sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("hours", course.outsideClassTime)
         intent.putExtra("course_number", course.course_number)
         intent.putExtra("survey_size", course.surveySize.toString())
+        intent.putExtra("year", course.year)
         intent.putExtra("id",course.id.toString())
         startActivity(intent)
     }
@@ -84,9 +85,6 @@ class MainActivity : AppCompatActivity() {
         var adapter = ListAdapter(this, list, OnClickListener(l), filesDir, liveList, currClasses)
         var recycler: RecyclerView = findViewById(R.id.favorites)
         val layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration = DividerItemDecoration(
-            recycler.context, layoutManager.orientation
-        )
         val searchText: EditText = findViewById(R.id.searchText)
         var filter = searchText.text.toString()
 
@@ -208,7 +206,9 @@ class MainActivity : AppCompatActivity() {
             dc = !dc
         }
 
-
+        val dividerItemDecoration = DividerItemDecoration(
+            recycler.context, layoutManager.orientation
+        )
         recycler.addItemDecoration(dividerItemDecoration)
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
