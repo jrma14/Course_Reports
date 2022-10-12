@@ -16,6 +16,8 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
@@ -30,6 +32,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.CourseReports"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,8 +40,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".classoverviewActivity"/>
-        <activity android:name=".ScanQRCodeActivity"/>
+        <activity android:name=".classoverviewActivity" android:theme="@style/Theme.CourseReports"/>
+        <activity android:name=".ScanQRCodeActivity" android:theme="@style/Theme.CourseReports"/>
     </application>
 
 </manifest>

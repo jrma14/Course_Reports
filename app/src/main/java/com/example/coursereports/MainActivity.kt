@@ -2,6 +2,7 @@ package com.example.coursereports
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         this.supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar!!.setDisplayShowCustomEnabled(true)
         supportActionBar!!.setCustomView(R.layout.action_bar)
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#AC2B37")))
         val view: View = supportActionBar!!.customView
         val title: TextView = view.findViewById(R.id.page_title)
         title.text = "Course Reports"

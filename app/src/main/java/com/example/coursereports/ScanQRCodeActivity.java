@@ -3,6 +3,8 @@ package com.example.coursereports;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -47,6 +49,9 @@ public class ScanQRCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_barcode);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#AC2B37")));
+        getSupportActionBar().setTitle("QR Scanner");
+
 
         initViews();
     }
